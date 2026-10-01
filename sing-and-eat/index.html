@@ -146,6 +146,10 @@ section { position: relative; }
 
 /* ── The night (piano) ───────────────────────────────────── */
 .night { padding-block: 60px; }
+/* The piano holds still with native sticky positioning, not a script pin. Inside the
+   #scroller box, iPhone Safari reports momentum scrolling late, so a script-driven pin
+   jittered; sticky is moved by Safari itself. The script sets the track's height. */
+.night-track.sticky .night { position: sticky; top: 0; }
 .night .wrap { display: grid; gap: 28px; }
 .piano { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); height: clamp(130px, 28vw, 190px); max-width: 640px; width: 100%; }
 .key {
@@ -358,6 +362,7 @@ section { position: relative; }
     </div>
   </section>
 
+  <div class="night-track">
   <section class="night" aria-labelledby="night-h">
     <div class="wrap">
       <div>
@@ -383,6 +388,7 @@ section { position: relative; }
       </ol>
     </div>
   </section>
+  </div>
 
   <section class="band" aria-labelledby="band-h">
     <div class="wrap">
@@ -491,9 +497,15 @@ section { position: relative; }
   }
   gsap.set(steps, { opacity: 0.45, x: 10 });
   mm.add("(min-height: 640px)", function () {
-    var tl = gsap.timeline({ scrollTrigger: { trigger: ".night", start: "top top", end: "+=" + (keys.length * 28) + "%", pin: true, scrub: 0.4 } });
+    var track = document.querySelector(".night-track"), night = track.querySelector(".night");
+    var scroller = document.getElementById("scroller");
+    track.classList.add("sticky");
+    function size() { track.style.height = (night.offsetHeight + scroller.clientHeight * keys.length * 0.28) + "px"; }
+    size();
+    var tl = gsap.timeline({ scrollTrigger: { trigger: track, start: "top top", end: "bottom bottom", scrub: 0.4, invalidateOnRefresh: true, onRefreshInit: size } });
     keys.forEach(function (_, i) { pressAt(tl, i); });
     tl.to({}, { duration: 0.3 });
+    return function () { track.classList.remove("sticky"); track.style.height = ""; };
   });
   mm.add("(max-height: 639px)", function () {
     var tl = gsap.timeline({ scrollTrigger: { trigger: ".night .piano", start: "top 70%", end: "+=" + (keys.length * 18) + "%", scrub: 0.4 } });
