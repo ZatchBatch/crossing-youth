@@ -46,8 +46,7 @@ body {
 }
 .scroller {
   position: fixed;
-  /* no pink of its own at top/bottom: Safari's bar strips already show the root pink */
-  inset: 0 var(--frame);
+  inset: var(--frame);
   overflow-y: auto;
   overflow-x: hidden;
   overscroll-behavior: contain;
