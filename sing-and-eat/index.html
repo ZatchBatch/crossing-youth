@@ -29,48 +29,31 @@
   --display: "Leckerli One", "Brush Script MT", cursive;
   --body: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
   --frame: 10px;
-  --frame-y: 28px;
   color-scheme: light;
 }
 * { box-sizing: border-box; }
-/* clip, not hidden: anything wider than the phone (the "Bring" lines slide in from 60px
-   off to the side) used to widen the page, so iPhone Safari zoomed out and the fixed frame
-   no longer covered the screen — content showed past its edge. clip keeps the pin working. */
-html { background: var(--pink); overflow-x: hidden; overflow-x: clip; }
+/* The page itself never scrolls: html/body are the pink, and the content scrolls inside
+   .scroller, a fixed box inset by the frame width. iPhone Safari 26 lets the document
+   scroll under its status bar and floating toolbar, and draws NO fixed element there —
+   a fixed frame (even bled 200px past the edges, even solid bars) left strips where the
+   page slid by. With no document scroll, those strips show the root's pink. */
+html, body { height: 100%; margin: 0; overflow: hidden; background: var(--pink); }
 body {
-  background: var(--cream);
   color: var(--ink);
   font-family: var(--body);
   font-size: 18px;
   line-height: 1.5;
-  overflow-x: hidden;
 }
-/* The pink frame with its thin ink rule, fixed like the slide's border.
-   iPhone Safari draws the page edge to edge, under the status bar and the floating
-   toolbar, but a fixed inset:0 box stops short of both — so the page scrolled by in
-   those strips, outside the frame. The frame bleeds --bleed past the top and bottom
-   with its pink border thickened to match: wherever the fixed box ends, pink still
-   reaches the screen edge. Off-screen on any browser whose fixed box is the full screen. */
-body::after {
-  --bleed: 200px;
-  content: "";
+.scroller {
   position: fixed;
-  top: calc(-1 * var(--bleed)); bottom: calc(-1 * var(--bleed)); left: 0; right: 0;
-  border: solid var(--pink);
-  /* top/bottom bands are thicker than the sides, plus the notch / home-bar insets */
-  border-width: calc(var(--bleed) + var(--frame-y) + env(safe-area-inset-top, 0px)) var(--frame) calc(var(--bleed) + var(--frame-y) + env(safe-area-inset-bottom, 0px));
-  box-shadow: inset 0 0 0 2px var(--ink);
-  pointer-events: none;
-  z-index: 50;
+  inset: var(--frame);
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  background: var(--cream);
+  box-shadow: 0 0 0 2px var(--ink);
 }
-/* Solid pink bars pinned to the top and bottom edges. iPhone Safari 26 paints the
-   strips under its status bar and toolbar from a SOLID-background fixed element touching
-   that edge (as it does for a site header); the frame above is a transparent box with a
-   border, which it ignores. Same height as the frame's top/bottom bands, so the ink rule
-   stays visible just inside them. */
-.edge { position: fixed; left: 0; right: 0; background-color: var(--pink); pointer-events: none; z-index: 51; }
-.edge.top { top: 0; height: calc(var(--frame-y) + env(safe-area-inset-top, 0px)); }
-.edge.bottom { bottom: 0; height: calc(var(--frame-y) + env(safe-area-inset-bottom, 0px)); }
 .wrap { max-width: 980px; margin: 0 auto; padding-inline: calc(var(--frame) + 22px); }
 a { color: inherit; }
 a:focus-visible, .btn:focus-visible { outline: 3px solid var(--blue); outline-offset: 4px; }
@@ -123,7 +106,7 @@ p { margin: 0; max-width: 34em; }
 section { position: relative; }
 
 /* ── Hero ────────────────────────────────────────────────── */
-.hero { padding-block: calc(56px + 28px + env(safe-area-inset-top, 0px)) 40px; overflow: hidden; }
+.hero { padding-block: 56px 40px; overflow: hidden; }
 .hero .wrap { position: relative; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 24px; align-items: center; }
 .hero .who { font-weight: 800; letter-spacing: .14em; text-transform: uppercase; font-size: 14px; color: var(--muted); margin-bottom: 14px; }
 .hero h1 { font-size: clamp(72px, 17vw, 156px); margin-bottom: 26px; }
@@ -246,7 +229,7 @@ section { position: relative; }
 .group:nth-child(2) { transform: rotate(1deg); }
 
 /* ── End ─────────────────────────────────────────────────── */
-.end { padding-block: 40px calc(90px + 28px + env(safe-area-inset-bottom, 0px)); text-align: left; }
+.end { padding-block: 40px 90px; text-align: left; }
 .end .script { font-size: clamp(56px, 14vw, 120px); margin-bottom: 22px; }
 .end .tags { display: flex; flex-wrap: wrap; gap: 12px; font-size: clamp(19px, 4.6vw, 26px); margin-bottom: 26px; }
 .end .ctas { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 40px; }
@@ -256,7 +239,7 @@ section { position: relative; }
 
 @media (max-width: 720px) {
   .groups { grid-template-columns: minmax(0, 1fr); }
-  .hero { padding-block: calc(40px + 28px + env(safe-area-inset-top, 0px)) 30px; }
+  .hero { padding-block: 40px 30px; }
   .hero .wrap { grid-template-columns: minmax(0, 1fr); }
   .art { width: min(78%, 340px); justify-self: end; margin-top: -10px; }
   .panel { grid-template-columns: minmax(0, 1fr); }
@@ -316,8 +299,7 @@ section { position: relative; }
   </defs>
 </svg>
 
-<div class="edge top" aria-hidden="true"></div>
-<div class="edge bottom" aria-hidden="true"></div>
+<div class="scroller" id="scroller">
 <main>
   <section class="hero" aria-labelledby="title">
     <div class="wrap">
@@ -458,6 +440,7 @@ section { position: relative; }
     </div>
   </section>
 </main>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
@@ -467,6 +450,8 @@ section { position: relative; }
   if (!window.gsap || !window.ScrollTrigger) return;
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   gsap.registerPlugin(ScrollTrigger);
+  // The content scrolls inside #scroller, not the window.
+  ScrollTrigger.defaults({ scroller: "#scroller" });
 
   // Arrival
   gsap.from(".hero h1", { y: 24, scale: 0.92, duration: 0.9, ease: "back.out(1.8)" });
