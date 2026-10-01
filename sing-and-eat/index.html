@@ -29,6 +29,7 @@
   --display: "Leckerli One", "Brush Script MT", cursive;
   --body: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
   --frame: 10px;
+  --frame-y: 28px;
   color-scheme: light;
 }
 * { box-sizing: border-box; }
@@ -52,7 +53,6 @@ body {
    reaches the screen edge. Off-screen on any browser whose fixed box is the full screen. */
 body::after {
   --bleed: 200px;
-  --frame-y: 28px;
   content: "";
   position: fixed;
   top: calc(-1 * var(--bleed)); bottom: calc(-1 * var(--bleed)); left: 0; right: 0;
@@ -63,6 +63,14 @@ body::after {
   pointer-events: none;
   z-index: 50;
 }
+/* Solid pink bars pinned to the top and bottom edges. iPhone Safari 26 paints the
+   strips under its status bar and toolbar from a SOLID-background fixed element touching
+   that edge (as it does for a site header); the frame above is a transparent box with a
+   border, which it ignores. Same height as the frame's top/bottom bands, so the ink rule
+   stays visible just inside them. */
+.edge { position: fixed; left: 0; right: 0; background-color: var(--pink); pointer-events: none; z-index: 51; }
+.edge.top { top: 0; height: calc(var(--frame-y) + env(safe-area-inset-top, 0px)); }
+.edge.bottom { bottom: 0; height: calc(var(--frame-y) + env(safe-area-inset-bottom, 0px)); }
 .wrap { max-width: 980px; margin: 0 auto; padding-inline: calc(var(--frame) + 22px); }
 a { color: inherit; }
 a:focus-visible, .btn:focus-visible { outline: 3px solid var(--blue); outline-offset: 4px; }
@@ -308,6 +316,8 @@ section { position: relative; }
   </defs>
 </svg>
 
+<div class="edge top" aria-hidden="true"></div>
+<div class="edge bottom" aria-hidden="true"></div>
 <main>
   <section class="hero" aria-labelledby="title">
     <div class="wrap">
