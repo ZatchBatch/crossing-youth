@@ -31,7 +31,10 @@
   color-scheme: light;
 }
 * { box-sizing: border-box; }
-html { background: var(--cream); }
+/* clip, not hidden: anything wider than the phone (the "Bring" lines slide in from 60px
+   off to the side) used to widen the page, so iPhone Safari zoomed out and the fixed frame
+   no longer covered the screen — content showed past its edge. clip keeps the pin working. */
+html { background: var(--cream); overflow-x: hidden; overflow-x: clip; }
 body {
   background: var(--cream);
   color: var(--ink);
@@ -121,11 +124,12 @@ section { position: relative; }
 @keyframes nudge { 50% { transform: translateY(5px); } }
 
 /* ── Bring ───────────────────────────────────────────────── */
-.bring { padding-block: 70px 80px; }
+.bring { padding-block: 70px 80px; overflow-x: clip; }
 .bring .lines { display: grid; gap: 10px; margin-bottom: 32px; }
 .bring .line { font-size: clamp(38px, 9.5vw, 84px); font-weight: 800; line-height: 1.02; letter-spacing: -.02em; margin: 0; }
 .bring mark {
   color: inherit;
+  background-color: transparent; /* browsers paint <mark> solid yellow by default, hiding the sweep */
   background-image: linear-gradient(var(--hl), var(--hl));
   background-repeat: no-repeat;
   background-position: 0 88%;
@@ -480,9 +484,9 @@ section { position: relative; }
   }
   gsap.set(steps, { opacity: 0.45, x: 10 });
   mm.add("(min-height: 640px)", function () {
-    var tl = gsap.timeline({ scrollTrigger: { trigger: ".night", start: "top top", end: "+=" + (keys.length * 55) + "%", pin: true, scrub: 0.4 } });
+    var tl = gsap.timeline({ scrollTrigger: { trigger: ".night", start: "top top", end: "+=" + (keys.length * 28) + "%", pin: true, scrub: 0.4 } });
     keys.forEach(function (_, i) { pressAt(tl, i); });
-    tl.to({}, { duration: 0.6 });
+    tl.to({}, { duration: 0.3 });
   });
   mm.add("(max-height: 639px)", function () {
     var tl = gsap.timeline({ scrollTrigger: { trigger: ".night .piano", start: "top 70%", end: "+=" + (keys.length * 18) + "%", scrub: 0.4 } });
