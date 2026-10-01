@@ -43,12 +43,21 @@ body {
   line-height: 1.5;
   overflow-x: hidden;
 }
-/* The pink frame with its thin ink rule, fixed like the slide's border */
+/* The pink frame with its thin ink rule, fixed like the slide's border.
+   iPhone Safari draws the page edge to edge, under the status bar and the floating
+   toolbar, but a fixed inset:0 box stops short of both — so the page scrolled by in
+   those strips, outside the frame. The frame bleeds --bleed past the top and bottom
+   with its pink border thickened to match: wherever the fixed box ends, pink still
+   reaches the screen edge. Off-screen on any browser whose fixed box is the full screen. */
 body::after {
+  --bleed: 200px;
   content: "";
-  position: fixed; inset: 0;
+  position: fixed;
+  top: calc(-1 * var(--bleed)); bottom: calc(-1 * var(--bleed)); left: 0; right: 0;
+  border: solid var(--pink);
+  border-width: calc(var(--bleed) + var(--frame)) var(--frame);
+  box-shadow: inset 0 0 0 2px var(--ink);
   pointer-events: none;
-  box-shadow: inset 0 0 0 var(--frame) var(--pink), inset 0 0 0 calc(var(--frame) + 2px) var(--ink);
   z-index: 50;
 }
 .wrap { max-width: 980px; margin: 0 auto; padding-inline: calc(var(--frame) + 22px); }
