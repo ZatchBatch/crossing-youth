@@ -9,6 +9,7 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://zatchbatch.github.io/crossing-youth/sing-and-eat/">
 <meta property="og:image" content="https://zatchbatch.github.io/crossing-youth/sing-and-eat/share.jpg">
+<meta name="theme-color" content="#F6BFD8">
 <meta name="twitter:card" content="summary_large_image">
 <style>html,body{margin:0}img{max-width:100%}</style>
 <meta name="description" content="Youth Sing & Eat at The Crossing Church — Wednesday, October 7, 6:30–8:15pm. Worship, a potluck dinner, and dessert.">
@@ -34,7 +35,7 @@
 /* clip, not hidden: anything wider than the phone (the "Bring" lines slide in from 60px
    off to the side) used to widen the page, so iPhone Safari zoomed out and the fixed frame
    no longer covered the screen — content showed past its edge. clip keeps the pin working. */
-html { background: var(--cream); overflow-x: hidden; overflow-x: clip; }
+html { background: var(--pink); overflow-x: hidden; overflow-x: clip; }
 body {
   background: var(--cream);
   color: var(--ink);
@@ -51,11 +52,13 @@ body {
    reaches the screen edge. Off-screen on any browser whose fixed box is the full screen. */
 body::after {
   --bleed: 200px;
+  --frame-y: 28px;
   content: "";
   position: fixed;
   top: calc(-1 * var(--bleed)); bottom: calc(-1 * var(--bleed)); left: 0; right: 0;
   border: solid var(--pink);
-  border-width: calc(var(--bleed) + var(--frame)) var(--frame);
+  /* top/bottom bands are thicker than the sides, plus the notch / home-bar insets */
+  border-width: calc(var(--bleed) + var(--frame-y) + env(safe-area-inset-top, 0px)) var(--frame) calc(var(--bleed) + var(--frame-y) + env(safe-area-inset-bottom, 0px));
   box-shadow: inset 0 0 0 2px var(--ink);
   pointer-events: none;
   z-index: 50;
@@ -112,7 +115,7 @@ p { margin: 0; max-width: 34em; }
 section { position: relative; }
 
 /* ── Hero ────────────────────────────────────────────────── */
-.hero { padding-block: 56px 40px; overflow: hidden; }
+.hero { padding-block: calc(56px + 28px + env(safe-area-inset-top, 0px)) 40px; overflow: hidden; }
 .hero .wrap { position: relative; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 24px; align-items: center; }
 .hero .who { font-weight: 800; letter-spacing: .14em; text-transform: uppercase; font-size: 14px; color: var(--muted); margin-bottom: 14px; }
 .hero h1 { font-size: clamp(72px, 17vw, 156px); margin-bottom: 26px; }
@@ -235,7 +238,7 @@ section { position: relative; }
 .group:nth-child(2) { transform: rotate(1deg); }
 
 /* ── End ─────────────────────────────────────────────────── */
-.end { padding-block: 40px 90px; text-align: left; }
+.end { padding-block: 40px calc(90px + 28px + env(safe-area-inset-bottom, 0px)); text-align: left; }
 .end .script { font-size: clamp(56px, 14vw, 120px); margin-bottom: 22px; }
 .end .tags { display: flex; flex-wrap: wrap; gap: 12px; font-size: clamp(19px, 4.6vw, 26px); margin-bottom: 26px; }
 .end .ctas { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 40px; }
@@ -245,7 +248,7 @@ section { position: relative; }
 
 @media (max-width: 720px) {
   .groups { grid-template-columns: minmax(0, 1fr); }
-  .hero { padding-block: 40px 30px; }
+  .hero { padding-block: calc(40px + 28px + env(safe-area-inset-top, 0px)) 30px; }
   .hero .wrap { grid-template-columns: minmax(0, 1fr); }
   .art { width: min(78%, 340px); justify-self: end; margin-top: -10px; }
   .panel { grid-template-columns: minmax(0, 1fr); }
