@@ -157,6 +157,22 @@ p { margin: 0; max-width: 36em; }
 .tile:nth-child(odd) { --r: -1.2deg; }
 .tile:nth-child(even) { --r: 1.2deg; }
 .tile { transform: rotate(var(--r)); }
+.tile { box-shadow: 4px 5px 0 var(--ink); transition: box-shadow .15s ease, translate .15s ease; cursor: pointer; }
+.tile:hover { translate: 2px 2px; box-shadow: 2px 3px 0 var(--ink); }
+.tile:has(details[open]) { translate: 2px 2px; box-shadow: 2px 3px 0 var(--ink-soft); }
+.tile details { display: contents; }
+.tile summary { list-style: none; display: grid; gap: 8px; align-content: start; outline: none; }
+.tile summary::-webkit-details-marker { display: none; }
+.tile:has(summary:focus-visible) { outline: 3px solid var(--ink); outline-offset: 4px; }
+.tile .chip { justify-self: start; margin-top: 2px; font-size: 13px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
+  padding: 4px 11px 4px 9px; border: 2px dashed var(--ink); border-radius: 999px; }
+.tile .chip b { font-weight: 800; }
+.tile .chip { white-space: nowrap; }
+.tiles:has(details[open]) { align-items: start; }
+.tile .c-close, .tile .c-click, .tile details[open] .c-open { display: none; }
+.tile details[open] .c-close { display: inline; }
+@media (hover: hover) and (pointer: fine) { .tile .c-tap { display: none; } .tile .c-click { display: inline; } }
+.tile .more { margin: 4px 0 0; padding-top: 12px; border-top: 2px dashed var(--ink); font-size: 16px; line-height: 1.45; text-wrap: pretty; }
 
 /* ── The trip ────────────────────────────────────────────── */
 .trip { padding-block: 50px 70px; overflow-x: clip; }
@@ -248,6 +264,10 @@ p { margin: 0; max-width: 36em; }
   .tile h3 { font-size: 16px; }
   .tile p { font-size: 15px; }
   .tiles { gap: 12px; }
+  .tiles { align-items: start; }
+  .tile:has(details[open]) { grid-column: 1 / -1; }
+  .tile .chip { font-size: 11.5px; letter-spacing: .03em; padding: 4px 9px 4px 7px; }
+  .tile .more { font-size: 15px; }
   .legs { grid-template-columns: minmax(0, 1fr); }
   .road { padding-block: 34px; }
   .road .wrap { grid-template-columns: minmax(0, 1fr); gap: 0; }
@@ -329,24 +349,48 @@ p { margin: 0; max-width: 36em; }
       <p class="lead">Worship, teaching and community with thousands of students from across the country.</p>
       <div class="tiles">
         <article class="tile">
-          <div class="pic" aria-hidden="true"><i class="dd d-guitar"></i></div>
-          <h3>Main sessions</h3>
-          <p>At the Ocean Center, with Louie Giglio and the Passion band.</p>
+          <details>
+            <summary>
+              <div class="pic" aria-hidden="true"><i class="dd d-guitar"></i></div>
+              <h3>Main sessions</h3>
+              <p>At the Ocean Center, with Louie Giglio and the Passion band.</p>
+              <span class="chip" aria-hidden="true"><span class="c-open"><b>+</b> <span class="c-tap">Tap</span><span class="c-click">Click</span> for more</span><span class="c-close"><b>−</b> Show less</span></span>
+            </summary>
+            <p class="more">Seven in all: Monday night, then every morning and every evening Tuesday through Thursday. Thousands of students worship together with the Passion band and special guests, then hear from Louie Giglio and other speakers.</p>
+          </details>
         </article>
         <article class="tile">
-          <div class="pic" aria-hidden="true"><i class="dd d-plogo"></i></div>
-          <h3>Squad Wars</h3>
-          <p>Every morning.</p>
+          <details>
+            <summary>
+              <div class="pic" aria-hidden="true"><i class="dd d-plogo"></i></div>
+              <h3>Squad Wars</h3>
+              <p>Every morning.</p>
+              <span class="chip" aria-hidden="true"><span class="c-open"><b>+</b> <span class="c-tap">Tap</span><span class="c-click">Click</span> for more</span><span class="c-close"><b>−</b> Show less</span></span>
+            </summary>
+            <p class="more">Every student is put on a Squad. At 9:30 each morning, Tuesday through Thursday, the Squads face off in high-energy, fast-action games before the morning session. By the end of the week, one Squad wins it all.</p>
+          </details>
         </article>
         <article class="tile">
-          <div class="pic" aria-hidden="true"><i class="dd d-bible"></i></div>
-          <h3>Small groups</h3>
-          <p>Time with our own leaders each night.</p>
+          <details>
+            <summary>
+              <div class="pic" aria-hidden="true"><i class="dd d-bible"></i></div>
+              <h3>Small groups</h3>
+              <p>Time with our own leaders each night.</p>
+              <span class="chip" aria-hidden="true"><span class="c-open"><b>+</b> <span class="c-tap">Tap</span><span class="c-click">Click</span> for more</span><span class="c-close"><b>−</b> Show less</span></span>
+            </summary>
+            <p class="more">After the evening session, around 9:30, our group meets on its own, back at the hotel or out on the beach. Students talk through what they heard that day with leaders who know them, and we pray together. There’s at least one leader for every eight students.</p>
+          </details>
         </article>
         <article class="tile">
-          <div class="pic" aria-hidden="true"><i class="dd d-umbrella brolly"></i></div>
-          <h3>Free afternoons</h3>
-          <p>On the beach.</p>
+          <details>
+            <summary>
+              <div class="pic" aria-hidden="true"><i class="dd d-umbrella brolly"></i></div>
+              <h3>Free afternoons</h3>
+              <p>On the beach.</p>
+              <span class="chip" aria-hidden="true"><span class="c-open"><b>+</b> <span class="c-tap">Tap</span><span class="c-click">Click</span> for more</span><span class="c-close"><b>−</b> Show less</span></span>
+            </summary>
+            <p class="more">Between the morning and evening sessions, students hang out at the beach or the pool, with our leaders watching over them the whole time. Pack a beach towel and sunscreen.</p>
+          </details>
         </article>
       </div>
     </div>
